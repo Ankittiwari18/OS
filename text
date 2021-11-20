@@ -1,1521 +1,740 @@
 /*
-
 15. C program to implement SCAN disk scheduling.
-
 */
-
 #include<stdio.h>
-
 #include<stdlib.h>
-
 int main()
-
 {
-
 int RQ[100],i,j,n,TotalHeadMoment=0,initial,size,move; printf("Enter the number of Requests\n"); scanf("%d",&n);
-
 printf("Enter the Requests sequence\n");
-
 for(i=0;i<n;i++)
-
 scanf("%d",&RQ[i]);
-
 printf("Enter initial head position\n"); scanf("%d",&initial); printf("Enter total disk size\n");
-
 scanf("%d",&size);
-
 printf("Enter the head movement direction for high 1 and for low 0\n"); scanf("%d",&move);
-
 // logic for C-Scan disk scheduling
-
 /*logic for sort the request array */
-
 for(i=0;i<n;i++)
-
 {
-
 for( j=0;j<n-i-1;j++)
-
 {
-
 if(RQ[j]>RQ[j+1])
-
 {
-
 int temp;
-
 temp=RQ[j];
-
 RQ[j]=RQ[j+1];
- 
-
-41
- 
 RQ[j+1]=temp;
-
 }
-
 }
-
 }
-
 int index;
-
 for(i=0;i<n;i++)
-
 {
-
 if(initial<RQ[i])
-
 {
-
 index=i;
-
 break;
-
 }
-
 }
-
 //	if movement is towards high value if(move==1)
 {
-
 for(i=index;i<n;i++)
-
 {
-
 TotalHeadMoment=TotalHeadMoment+abs(RQ[i]-initial); initial=RQ[i];
 }
-
 //	last movement for max size TotalHeadMoment=TotalHeadMoment+abs(size-RQ[i-1]-1); /*movement max to min disk */ TotalHeadMoment=TotalHeadMoment+abs(size-1-0); initial=0;
-
 for( i=0;i<index;i++)
-
 {
-
 TotalHeadMoment=TotalHeadMoment+abs(RQ[i]-initial); initial=RQ[i];
-
 }
-
 }
-
 //	if movement is towards low value else
 {
-
 for(i=index-1;i>=0;i--)
-
 {
-
 TotalHeadMoment=TotalHeadMoment+abs(RQ[i]-initial); initial=RQ[i];
 }
-
 //	last movement for min size TotalHeadMoment=TotalHeadMoment+abs(RQ[i+1]-0); /*movement min to max disk */ TotalHeadMoment=TotalHeadMoment+abs(size-1-0); initial =size-1;
-
 for(i=n-1;i>=index;i--)
-
-{
- 
-
-
-42
- 
+{ 
 TotalHeadMoment=TotalHeadMoment+abs(RQ[i]-initial); initial=RQ[i];
-
 }
-
 }
-
 printf("Total head movement is %d",TotalHeadMoment); return 0;
-
 }
-
-
 /*
-
 Q 14. C program to implement FCFS disk scheduling.
-
 */
-
 #include<stdio.h>
-
 int main()
-
 {
-
 int i,j,sum=0,n;
-
 int ar[20],tm[20];
-
 int disk;
-
 printf("enter number of location\t");
-
 scanf("%d",&n);
-
 printf("enter position of head\t");
-
 scanf("%d",&disk);
-
 printf("enter elements of disk queue\n");
-
 for(i=0;i<n;i++)
-
 {
-
 scanf("%d",&ar[i]);
-
 tm[i]=disk-ar[i];
-
 if(tm[i]<0)
-
 {
-
 tm[i]=ar[i]-disk;
-
 }
-
 disk=ar[i];
-
 sum=sum+tm[i];
-
 }
-
 /*for(i=0;i<n;i++)
-
 {
-
 printf("\n%d",tm[i]);
-
 } */
-
 printf("\nmovement of total cylinders %d",sum);
-
 return 0;
-
 }
-
 #include<stdio.h>//least recently used 
-
 int findLRU(int time[], int n){
-
 int i, minimum = time[0], pos = 0;
-
 for(i = 1; i < n; ++i){
-
 if(time[i] < minimum){
-
 minimum = time[i];
-
 pos = i;
-
 }
-
 }
-
 return pos;
-
 }
-
 int main()
-
 {
-
 int no_of_frames, no_of_pages, frames[10], pages[30], counter = 0, time[10], flag1, flag2, i, j, pos, faults = 0; printf("Enter number of frames: ");
 scanf("%d", &no_of_frames);
-
 printf("Enter number of pages: ");
-
 scanf("%d", &no_of_pages);
-
 printf("Enter reference string: ");
-
 for(i = 0; i < no_of_pages; ++i){
-
 scanf("%d", &pages[i]);
-
 }
-
 for(i = 0; i < no_of_frames; ++i){
-
 frames[i] = -1;
-
 }
-
 for(i = 0; i < no_of_pages; ++i){
-
 flag1 = flag2 = 0;
-
 for(j = 0; j < no_of_frames; ++j){
-
 if(frames[j] == pages[i]){
-
 counter++;
-
 time[j] = counter;
- 
-
-
-36
- 
 flag1 = flag2 = 1;
-
 break;
-
 }
-
 }
-
 if(flag1 == 0){
-
 for(j = 0; j < no_of_frames; ++j){
-
 if(frames[j] == -1){
-
 counter++;
-
 faults++;
-
 frames[j] = pages[i];
-
 time[j] = counter;
-
 flag2 = 1;
-
 break;
-
 }
-
 }
-
 }
-
 if(flag2 == 0){
-
 pos = findLRU(time, no_of_frames);
-
 counter++;
-
 faults++;
-
 frames[pos] = pages[i];
-
 time[pos] = counter;
-
 }
-
 printf("\n");
-
 for(j = 0; j < no_of_frames; ++j){
-
 printf("%d\t", frames[j]);
-
 }
-
 }
-
 printf("\n\nTotal Page Faults = %d", faults);
-
 return 0;
-
 }
-
 #include <stdio.h>//FIFO page replacement policy
-
 int main()
-
 {
-
 int referenceString[10], pageFaults = 0, m, n, s, pages, frames; printf("\nEnter the number of Pages:\t"); scanf("%d", &pages);
-
 printf("\nEnter reference string values:\n"); for(int m = 0; m < pages; m++) {
 printf("Value No. [%d]:\t", m + 1);
-
 scanf("%d", &referenceString[m]);
-
 }
-
 printf("\n What are the total number of frames:\t");
-
 {
-
 scanf("%d", &frames);
-
 }
-
 int temp[frames];
-
 for(m = 0; m < frames; m++)
-
 {
-
 temp[m] = -1;
-
 }
-
 for(m = 0; m < pages; m++)
-
 {
-
 s = 0;
-
 for(n = 0; n < frames; n++)
-
 {
-
 if(referenceString[m] == temp[n])
-
 {
-
 s++;
-
 pageFaults--;
-
 }
-
 }
-
 pageFaults++;
-
 if((pageFaults <= frames) && (s == 0))
-
 {
-
 temp[m] = referenceString[m];
- 
-
-34
- 
 }
-
 else if(s == 0)
-
 {
-
 temp[(pageFaults - 1) % frames] = referenceString[m];
-
 }
-
 printf("\n");
-
 for(n = 0; n < frames; n++)
-
 {
-
 printf("%d\t", temp[n]);
-
 }
-
 }
-
 printf("\nTotal Page Faults:\t%d\n", pageFaults); return 0;
-
 }
-
 #include <stdbool.h> //Implement Banker’s Algo for Deadlock Avoidance to check for the safe and unsafe state
-
 #include <stdio.h>
-
 struct process_info {
-
 int max[10];
-
 int allocated[10];
-
 int need[10];
-
 };
-
 int no_of_process, no_of_resources;
-
 void input(struct process_info process[no_of_process],
-
 int available[no_of_resources]) {
-
 for	(int i = 0; i < no_of_process; i++) { printf("Enter process[%d] info\n", i); printf("Enter Maximum Need: ");
-
 for (int j = 0; j < no_of_resources; j++)
-
 scanf("%d", &process[i].max[j]);
-
 printf("Enter No. of Allocated Resources for this process: "); for (int j = 0; j < no_of_resources; j++) {
-
 scanf("%d", &process[i].allocated[j]); process[i].need[j] = process[i].max[j] -
 process[i].allocated[j];
-
 }
-
 }
-
 printf("Enter Available Resources: ");
-
 for	(int i = 0; i < no_of_resources; i++) { scanf("%d", &available[i]);
-
 }
-
 }
-
 void showTheInfo(struct process_info process[no_of_process]) { printf("\nPID\tMaximum\t\tAllocated\tNeed\n");
-
 for	(int i = 0; i < no_of_process; i++) { printf("P[%d]\t", i);
-
 for (int j = 0; j < no_of_resources; j++)
-
 printf("%d ", process[i].max[j]);
- 
-
-
-30
- 
 printf("\t\t");
-
 for	(int j = 0; j < no_of_resources; j++) printf("%d ", process[i].allocated[j]);
 printf("\t\t");
-
 for (int j = 0; j < no_of_resources; j++)
-
 printf("%d ", process[i].need[j]);
-
 printf("\n");
-
 }
-
 }
-
 bool applySafetyAlgo(struct process_info process[no_of_process], int available[no_of_resources],
 int safeSequence[no_of_process]) { bool finish[no_of_process]; int work[no_of_resources];
 for	(int i = 0; i < no_of_resources; i++) { work[i] = available[i];
-
 }
-
 for (int i = 0; i < no_of_process; i++) finish[i] = false;
-
 bool proceed = true;
-
 int k = 0;
-
 while (proceed) {
-
 proceed = false;
-
 for	(int i = 0; i < no_of_process; i++) { bool flag = true;
-
 if (finish[i] == false) {
-
 for	(int j = 0; j < no_of_resources; j++) { if (process[i].need[j] <= work[j]) {
-
 continue;
-
 } else {
-
 flag = false;
-
 break;
-
 }
-
 }
-
 if (flag == false) continue;
-
 for	(int j = 0; j < no_of_resources; j++) work[j] = work[j] + process[i].allocated[j];
 finish[i] = true;
-
 safeSequence[k++] = i;
-
 proceed = true;
-
 }
-
 }
-
 }
-
 int i;
-
 for	(i = 0; i < no_of_process && finish[i] == true; i++) { continue;
-
 }
-
 if (i == no_of_process)
-
 return true;
-
 else
- 
-
-
-31
- 
 return false;
-
 }
-
 bool isSafeState(struct process_info process[no_of_process], int available[no_of_resources],
 int safeSequence[no_of_process]) {
-
 if (applySafetyAlgo(process, available, safeSequence) == true) return true;
-
 return false;
-
 }
-
 int main() {
-
 printf("Enter No of Process\n");
-
 scanf("%d", &no_of_process);
-
 printf("Enter No of Resource Instances in system\n"); scanf("%d", &no_of_resources); int available[no_of_resources];
 int safeSequence[no_of_process];
-
 struct process_info process[no_of_process];
-
 printf("***********Enter details of processes*************\n");
-
 input(process, available);
-
 showTheInfo(process);
-
 if (isSafeState(process, available, safeSequence)) { printf("\nSystem is in SAFE State\n"); printf("Safe Sequence is: ");
 for (int i = 0; i < no_of_process; i++)
-
 printf("P[%d] ", safeSequence[i]);
-
 } else
-
 printf("System is in UNSAFE State\n"); return 0;
-
 }
-
 10. C program to demonstrate working of execl()
-
 where parent process executes "ls" command and child process executes "date" command
-
 */
-
 #include<stdio.h>
-
 #include<unistd.h>
-
 #include<sys/types.h>
-
 #include<stdlib.h>
-
 int main() {
-
 pid_t p = fork();
-
 if(p<0)
-
 {
-
 printf("fork failed"); exit(1);
-
 }
-
 else
-
 {
-
 if(p==0)
-
 {
-
 execl("/usr/bin/date","date",NULL);
-
 perror("execl failed");
-
 }
-
 else
-
 {
-
 execl("/usr/bin/ls","ls",NULL); perror("execl failed");
-
 }
-
 }
-
 }
-
-
 /*
-
 9.	C program to Implement Interprocess Communication using shared memory a. Writer File
-
-
 */
-
 #include <sys/ipc.h>
-
 #include <sys/shm.h>
-
 #include <stdio.h>
-
 void main() {
-
 key_t my_key = ftok("shmfile",65); // ftok function is used to generate unique key
-
 int shmid = shmget(my_key,1024,0666|IPC_CREAT); // shmget returns an ide in shmid
-
 char *str = (char*) shmat(shmid,(void*)0,0); // shmat to join to shared memory
-
 printf("Write Data : ");
-
 fgets(str, 50, stdin);
-
 printf("Data written in memory: %s\n",str); //detach from shared memory shmdt(str);
 }
-
-
 /*
-
 9. b. Reader file.
-
 */
-
 #include <sys/ipc.h>
-
 #include <sys/shm.h>
-
 #include <stdio.h>
-
 void main() {
-
 key_t my_key = ftok("shmfile",65); // ftok function is used to generate unique key
- 
-
-
-
-26
- 
 int shmid = shmget(my_key,1024,0666|IPC_CREAT); // shmget returns an ide in shmid
-
 char *str = (char*) shmat(shmid,(void*)0,0); // shmat to join to shared memory
-
 printf("Data read from memory: %s\n",str); shmdt(str);
-
 shmctl(shmid,IPC_RMID,NULL); // destroy the shared memory
-
 }
-
-
 /*
-
 C program to Implement Interprocess Communication using PIPE.
-
 */
-
 #include <stdio.h>
-
 #include <unistd.h>
-
 #include <stdlib.h>
-
 #define MSGSIZE 16
-
 char* msg1 = "hello, world #1";
-
 char* msg2 = "hello, world #2";
-
 char* msg3 = "hello, world #3";
-
 int main()
-
 {
-
 char inbuf[MSGSIZE];
-
 int p[2], i;
-
 if (pipe(p) < 0)
-
 exit(1);
-
 /* continued */
-
 /* write pipe */
-
 write(p[1], msg1, MSGSIZE);
-
 write(p[1], msg2, MSGSIZE);
-
 write(p[1], msg3, MSGSIZE);
-
 for (i = 0; i < 3; i++) {
-
 /* read pipe */
-
 read(p[0], inbuf, MSGSIZE);
-
 printf("%s\n", inbuf);
-
 }
-
 return 0;
-
 }
-
-
 /*
-
 7. C program to Implement Preemptive Priority CPU scheduling algo
-
 */
-
 #include<stdio.h>
-
 struct process
-
 {
-
 int WT,AT,BT,TAT,PT;
-
 };
-
 struct process a[10];
-
 int main()
-
 {
-
 int n,temp[10],t,count=0,short_p;
-
 float total_WT=0,total_TAT=0,Avg_WT,Avg_TAT; printf("Enter the number of the process\n"); scanf("%d",&n);
-
 printf("Enter the arrival time , burst time and priority of the process\n");
-
 printf("AT BT PT\n");
-
 for(int i=0;i<n;i++)
-
 {
-
 scanf("%d%d%d",&a[i].AT,&a[i].BT,&a[i].PT);
-
 //	copying the burst time in
-
 //	a temp array fot futher use temp[i]=a[i].BT;
-
 }
-
 //	we initialize the burst time
-
 //	of a process with maximum a[9].PT=10000;
-
 for(t=0;count!=n;t++)
-
 {
- 
-
-21
- 
 short_p=9;
-
 for(int i=0;i<n;i++)
-
 {
-
 if(a[short_p].PT>a[i].PT && a[i].AT<=t && a[i].BT>0)
-
 {
-
 short_p=i;
-
 }
-
 }
-
 a[short_p].BT=a[short_p].BT-1;
-
 //	if any process is completed if(a[short_p].BT==0)
 {
-
 //	one process is completed
-
 //	so count increases by 1 count++;
 a[short_p].WT=t+1-a[short_p].AT-temp[short_p]; a[short_p].TAT=t+1-a[short_p].AT;
-
 //	total calculation
-
 total_WT=total_WT+a[short_p].WT;
-
 total_TAT=total_TAT+a[short_p].TAT;
-
 }
-
 }
-
 Avg_WT=total_WT/n;
-
 Avg_TAT=total_TAT/n;
-
 //	printing of the answer printf("ID WT TAT\n"); for(int i=0;i<n;i++)
-
 {
-
 printf("%d %d\t%d\n",i+1,a[i].WT,a[i].TAT);
-
 }
-
 printf("Avg waiting time of the process is %f\n",Avg_WT); printf("Avg turn around time of the process is %f\n",Avg_TAT);
-
 return 0;
-
 }
-
 /*
-
-
 6. C program to Implement Round Robin CPU scheduling algo.
-
 */
-
 #include<stdio.h>
-
 #include<stdlib.h>
-
 void main()
-
 {
-
 // initlialize the variable name
-
 int i, NOP, sum=0,count=0, y, quant, wt=0, tat=0, at[10], bt[10], temp[10];
-
 float avg_wt, avg_tat;
-
 printf(" Total number of process in the system: "); scanf("%d", &NOP);
-
 y = NOP; // Assign the number of process to variable y
-
 //	Use for loop to enter the details of the process like Arrival time and the Burst Time
 for(i=0; i<NOP; i++)
-
 {
-
 printf("\n Enter the Arrival and Burst time of the Process[%d]\n",
-
 i+1);
-
 printf(" Arrival time is: \t"); // Accept arrival time scanf("%d", &at[i]);
 printf(" \nBurst time is: \t"); // Accept the Burst time scanf("%d", &bt[i]);
 temp[i] = bt[i]; // store the burst time in temp array
-
 }
-
 //	Accept the Time qunat
-
 printf("Enter the Time Quantum for the process: \t"); scanf("%d", &quant);
-
 // Display the process No, burst time, Turn Around Time and the waiting
-
 time
- 
-
-
-18
- 
 printf("\n Process No \t\t Burst Time \t\t TAT \t\t Waiting Time ");
-
 for(sum=0, i = 0; y!=0; )
-
 {
-
 if(temp[i] <= quant && temp[i] > 0) // define the conditions
-
 {
-
 sum = sum + temp[i];
-
 temp[i] = 0;
-
 count=1;
-
 }
-
 else if(temp[i] > 0)
-
 {
-
 temp[i] = temp[i] - quant;
-
 sum = sum + quant;
-
 }
-
 if(temp[i]==0 && count==1)
-
 {
-
 y--; //decrement the process no.
-
 printf("\nProcess No[%d] \t\t %d\t\t\t\t %d\t\t\t %d", i+1, bt[i], sum-at[i], sum-at[i]-bt[i]);
-
 wt = wt+sum-at[i]-bt[i];
-
 tat = tat+sum-at[i];
-
 count =0;
-
 }
-
 if(i==NOP-1)
-
 {
-
 i=0;
-
 }
-
 else if(at[i+1]<=sum)
-
 {
-
 i++;
-
 }
-
 else
-
 {
-
 i=0;
-
 }
-
 }
-
 //	represents the average waiting time and Turn Around time avg_wt = wt * 1.0/NOP;
 avg_tat = tat * 1.0/NOP;
-
 printf("\n Average Turn Around Time: \t%f", avg_wt);
-
 printf("\n Average Waiting Time: \t%f", avg_tat);
-
 }
-
 /*
-
 5.	C program to implement SRTF algorithm.
-
 */
-
 #include<stdio.h>
-
 #include<stdbool.h>
-
 #include<limits.h>
-
 struct process_struct
-
 {
-
 int pid;
-
 int at;
-
 int bt;
-
 int ct,wt,tat,rt,start_time;
-
 }ps[100];
-
 int findmax(int a, int b)
-
 {
-
 return a>b?a:b;
-
 }
-
 int findmin(int a, int b)
-
 {
-
 return a<b?a:b;
-
 }
-
 int main()
-
 {
-
 int n;
-
 float bt_remaining[100];
-
 bool is_completed[100]={false},is_first_process=true;
-
 int current_time = 0;
-
 int completed = 0;;
-
 float
-
 sum_tat=0,sum_wt=0,sum_rt=0,total_idle_time=0,length_cycle,prev=0; float cpu_utilization;
- 
-
-
-14
- 
 int max_completion_time,min_arrival_time;
-
 printf("Enter total number of processes: ");
-
 scanf("%d",&n);
-
 for(int i=0;i<n;i++)
-
 {
-
 printf("\nEnter Process %d Arrival Time: ",i);
-
 scanf("%d",&ps[i].at);
-
 ps[i].pid = i ;
-
 }
-
 for(int i=0;i<n;i++)
-
 {
-
 printf("\nEnter Process %d Burst Time: ",i); scanf("%d",&ps[i].bt);
-
 bt_remaining[i]= ps[i].bt;
-
 }
-
 while(completed!=n)
-
 {
-
 //find process with min. burst time in ready queue at current time
-
 int min_index = -1;
-
 int minimum = INT_MAX;
-
 for(int i = 0; i < n; i++) {
-
 if(ps[i].at <= current_time && is_completed[i] == false) { if(bt_remaining[i] < minimum) {
-
 minimum = bt_remaining[i];
-
 min_index = i;
-
 }
-
 if(bt_remaining[i]== minimum) {
-
 if(ps[i].at < ps[min_index].at) {
-
 minimum= bt_remaining[i];
-
 min_index = i;
-
 }
-
 }
-
 }
-
 }
-
-
 if(min_index==-1)
-
 {
-
 current_time++;
-
 }
-
 else
-
 {
-
 if(bt_remaining[min_index] == ps[min_index].bt)
-
 {
-
 ps[min_index].start_time = current_time;
-
 total_idle_time += (is_first_process==true) ? 0 :
-
 (ps[min_index].start_time -	prev);
-
 is_first_process=false;
- 
-
-
-15
- 
 }
-
 bt_remaining[min_index] -= 1;
-
 current_time++;
-
 prev=current_time;
-
 if(bt_remaining[min_index] == 0)
-
 {
-
 ps[min_index].ct = current_time;
-
 ps[min_index].tat = ps[min_index].ct - ps[min_index].at; ps[min_index].wt= ps[min_index].tat - ps[min_index].bt; ps[min_index].rt = ps[min_index].start_time -
-
 ps[min_index].at;
-
-
 sum_tat +=ps[min_index].tat;
-
 sum_wt += ps[min_index].wt;
-
 sum_rt += ps[min_index].rt;
-
 completed++;
-
 is_completed[min_index]=true;
-
 //total_idle_time += (is_first_process==true) ? 0 :
-
 (ps[min_index].start_time -	prev);
-
 // prev= ps[min_index].ct; // or current_time;
-
 }
-
 }
-
 }
-
 //Calculate Length of Process completion cycle max_completion_time = INT_MIN; min_arrival_time = INT_MAX; for(int i=0;i<n;i++)
-
 {
-
 max_completion_time = findmax(max_completion_time,ps[i].ct); min_arrival_time = findmin(min_arrival_time,ps[i].at);
 }
-
 length_cycle = max_completion_time - min_arrival_time;
-
 //Output
-
 printf("\nProcess No.\tAT\tCPU Burst Time\tCT\tTAT\tWT\tRT\n");
-
 for(int i=0;i<n;i++)
-
 printf("%d\t\t%d\t%d\t\t%d\t%d\t%d\t%d\
-
 n",ps[i].pid,ps[i].at,ps[i].bt,ps[i].ct,ps[i].tat,ps[i].wt,ps[i].rt);
-
 printf("\n");
-
 cpu_utilization = (float)(length_cycle - total_idle_time)/ length_cycle;
-
 printf("\nAverage Turn Around time= %f ",(float)sum_tat/n);
-
 printf("\nAverage Waiting Time= %f ",(float)sum_wt/n);
-
 printf("\nAverage Response Time= %f ",(float)sum_rt/n);
-
 printf("\nThroughput= %f",n/(float)length_cycle);
-
 printf("\nCPU Utilization(Percentage)= %f",cpu_utilization*100);
-
 return 0; 
 }
-
 /*
-
-
 4. C program to Implement FCFS CPU Scheduling Algorithm
-
 */
-
 #include<stdio.h>
-
 #include <stdlib.h>
-
 struct process_struct
-
 {
-
 int pid;
-
 int at;	//Arrival Time
-
 int bt;	//CPU Burst time
-
 int ct,wt,tat,rt,start_time;	// Completion, waiting, turnaround,
-
 response time }ps[100];
-
-
 int findmax(int a, int b)
-
 {
-
 return a>b?a:b;
-
 }
-
 int comparatorAT(const void * a, const void *b)
-
 {
-
 int x =((struct process_struct *)a) -> at; int y =((struct process_struct *)b) -> at; if(x<y)
 return -1;	// No sorting
-
 else if( x>=y) // = is for stable sort
-
 return 1;	// Sort
-
-
 }
-
 int comparatorPID(const void * a, const void *b)
-
 {
-
 int x =((struct process_struct *)a) -> pid;
- 
-
-
-11
- 
 int y =((struct process_struct *)b) -> pid; if(x<y)
-
 return -1;	// No sorting
-
 else if( x>=y)
-
 return 1;	// Sort
-
 }
-
 int main()
-
 {
-
 int n;
-
-printf("Enter total number of processes: "); scanf("%d",&n);
-
+printf("Enter total number of processes: "); scanf("%d",&n); 
 float sum_tat=0,sum_wt=0,sum_rt=0;
-
 int length_cycle,total_idle_time=0;
-
 float cpu_utilization;
-
 for(int i=0;i<n;i++)
-
 {
-
 printf("\nEnter Process %d Arrival Time: ",i);
-
 scanf("%d",&ps[i].at);
-
 ps[i].pid = i ;
-
 }
-
 for(int i=0;i<n;i++)
-
 {
-
 printf("\nEnter Process %d Burst Time: ",i); scanf("%d",&ps[i].bt);
-
 }
-
-
 //sort
-
 qsort((void *)ps,n, sizeof(struct process_struct),comparatorAT);
-
 //calculations
-
 for(int i=0;i<n;i++)
-
 {
-
 ps[i].start_time = (i==0) ? ps[i].at : findmax(ps[i].at, ps[i-1].ct); ps[i].ct = ps[i].start_time + ps[i].bt; ps[i].tat = ps[i].ct-ps[i].at;
 ps[i].wt = ps[i].tat-ps[i].bt;
-
 ps[i].rt=ps[i].wt;
-
 sum_tat += ps[i].tat;
-
 sum_wt += ps[i].wt;
-
 sum_rt += ps[i].rt;
-
 total_idle_time += (i==0) ? 0 : (ps[i].start_time -	ps[i-1].ct);
-
 }
-
 length_cycle = ps[n-1].ct - ps[0].start_time;
- 
-
-
-
-
-12
- 
 //sort so that process ID in output comes in Original order (just for interactivity)
-
 qsort((void *)ps,n, sizeof(struct process_struct),comparatorPID);
-
 //Output
-
 printf("\nProcess No.\tAT\tCPU Burst Time\tCT\tTAT\tWT\tRT\n");
-
 for(int i=0;i<n;i++)
-
 printf("%d\t\t%d\t%d\t\t%d\t%d\t%d\t%d\
-
 n",ps[i].pid,ps[i].at,ps[i].bt,ps[i].ct,ps[i].tat,ps[i].wt,ps[i].rt);
-
 printf("\n");
-
 cpu_utilization = (float)(length_cycle - total_idle_time)/ length_cycle;
-
 printf("\nAverage Turn Around time= %f ",sum_tat/n);
-
 printf("\nAverage Waiting Time= %f ",sum_wt/n);
-
 printf("\nAverage Response Time= %f ",sum_rt/n);
-
 printf("\nThroughput= %f",n/(float)length_cycle);
-
 printf("\nCPU Utilization(Percentage)= %f",cpu_utilization*100);
-
 printf("\n");
-
 return 0;
-
 }
 /*
-
 3. b. C program to Implement the Zombie Process.
-
 */
-
 #include<stdio.h>
-
 #include<unistd.h>
-
 int main(){
-
 while (1)
-
 {
-
 if(fork()==0){
-
 printf("child started ... and finished! PID: %d\n",getpid()); return 0;
-
 }
-
 else{
-
 printf("Parent just won't die...\n");
-
 sleep(5);
-
 }
-
 }
-
 }
 /*
-
 3. a. C program to Implement the Orphan Process.
-
 */
-
 #include<stdio.h>
-
 #include <unistd.h>
-
 int main()
-
 {
-
 //	Create a child process int pid = fork();
-
 if (pid > 0)
-
 printf("Parent started...and finished PID: %d\n",getpid());
-
 //	Note that pid is 0 in child process
-
 //	and negative if fork() fails
-
 else if (pid == 0)
-
 {
-
 sleep(5);
-
 printf("In child process PID: %d ", getpid());
-
 }
-
 return 0;
-
 }
-
 #include <stdio.h>//C Program in which Parent Process Computes the SUM OF EVEN NUMBERS and Child Process Computes the sum of ODD NUMBERS stored in array using fork () . 
-
 #include <unistd.h>
-
 int main()
-
 {
-
 int a[10] = { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10 }; int sumOdd = 0, sumEven = 0, n, i; n = fork();
-
 //	Checking if n is not 0 if (n > 0) {
 for (i = 0; i < 10; i++) {
-
 if (a[i] % 2 == 0)
-
 sumEven = sumEven + a[i];
-
 }
-
 printf("Parent process \n");
-
 printf("Sum of even no. is %d\n",sumEven );
-
 }
-
 //	If n is 0 i.e. we are in child process
-
 else {
-
 for (i = 0; i < 10; i++) {
-
 if (a[i] % 2 != 0)
-
 sumOdd = sumOdd + a[i];
-
 }
-
 printf("Child process \n"); printf("Sum of odd no. is %d", sumOdd);
 }
-
 return 0;
-
 }
- 
-
-
- 
-
-
